@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
     <head>
+		<title> Mapa de amenaza por inundación de Roldanillo</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
@@ -11,7 +12,12 @@
         <link rel="stylesheet" href="css/leaflet-search.css">
         <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
         <link rel="stylesheet" href="css/leaflet-measure.css">
-        <style>
+		<link rel="stylesheet" href="css/fullscreen.css"/>
+		<link rel="stylesheet" href="css/Control.MiniMap.css"/>
+		<link rel="stylesheet" href="css/Leaflet.GraphicScale.min.css" />
+        <link rel="stylesheet" href="css/demo.css" />
+		<link rel="stylesheet" href="css/legend.css"/>
+		<style>
         html, body, #map {
             width: 100%;
             height: 100%;
@@ -19,14 +25,13 @@
             margin: 0;
         }
         </style>
-        <title></title>
+        
     </head>
     <body>
         <div id="map">
         </div>
         <script src="js/qgis2web_expressions.js"></script>
         <script src="js/leaflet.js"></script><script src="js/L.Control.Locate.min.js"></script>
-        <script src="js/multi-style-layer.js"></script>
         <script src="js/leaflet.rotatedMarker.js"></script>
         <script src="js/leaflet.pattern.js"></script>
         <script src="js/leaflet-hash.js"></script>
@@ -37,10 +42,14 @@
         <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
         <script src="js/leaflet-measure.js"></script>
         <script src="js/leaflet-search.js"></script>
-        <script src="data/Predios_PR100_1.js"></script>
-        <script src="data/Red_Hidrica_2.js"></script>
-        <script src="data/Drenaje_Sencillo_3.js"></script>
-        <script src="data/Canal_Doble_4.js"></script>
+        <script src="data/Predios_PR2_1.js"></script>
+        <script src="data/Predios_PR10_2.js"></script>
+        <script src="data/Predios_PR100_3.js"></script>
+        <script src="data/Red_Hidrica_4.js"></script>
+        <script src="data/Drenaje_Sencillo_5.js"></script>
+        <script src="data/Canal_Doble_6.js"></script>
+		<script src="js/Control.MiniMap.js" type="text/javascript"></script>
+		<script src="js/Leaflet.GraphicScale.min.js"></script>
         <script>
         var highlightLayer;
         function highlightFeature(e) {
@@ -48,20 +57,20 @@
 
             if (e.target.feature.geometry.type === 'LineString') {
               highlightLayer.setStyle({
-                color: '#ffff00',
+                color: '#00FFFF',
               });
             } else {
               highlightLayer.setStyle({
-                fillColor: '#ffff00',
+                fillColor: '#00FFFF',
                 fillOpacity: 1
               });
             }
         }
         var map = L.map('map', {
             zoomControl:true, maxZoom:28, minZoom:1
-        }).fitBounds([[4.396337502291725,-76.16597402403505],[4.424627549824456,-76.13498300773917]]);
+        }).fitBounds([[4.398698748049781,-76.16567721292792],[4.42682596909908,-76.12918014639682]]);
         var hash = new L.Hash(map);
-        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
+
         L.control.locate({locateOptions: {maxZoom: 19}}).addTo(map);
         var measureControl = new L.Control.Measure({
             position: 'topleft',
@@ -78,13 +87,15 @@
         var bounds_group = new L.featureGroup([]);
         function setBounds() {
         }
-        var layer_ESRITopo_0 = L.tileLayer('http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+		var osmAttrib='<a href="https://www.google.at/permissions/geoguidelines/attr-guide.html">Map data ©2015 Google</a>'
+        var layer_GoogleTerrain_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
             opacity: 1.0,
-            attribution: '',
+            attribution: osmAttrib ,
         });
-        layer_ESRITopo_0;
-        map.addLayer(layer_ESRITopo_0);
-        function pop_Predios_PR100_1(feature, layer) {
+        layer_GoogleTerrain_0;
+        map.addLayer(layer_GoogleTerrain_0);
+
+        function pop_Predios_PR2_1(feature, layer) {
             layer.on({
                 mouseout: function(e) {
                     for (i in e.target._eventParents) {
@@ -95,67 +106,35 @@
             });
             var popupContent = '<table>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['OBJECTID'] !== null ? Autolinker.link(String(feature.properties['OBJECTID'])) : '') + '</td>\
+                        <td colspan="2"><strong>CAPA</strong><br />' + (feature.properties['CAPA'] !== null ? Autolinker.link(String(feature.properties['CAPA'])) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['CODIGO'] !== null ? Autolinker.link(String(feature.properties['CODIGO'])) : '') + '</td>\
+                        <th scope="row">CODIGO</th>\
+                        <td>' + (feature.properties['CODIGO'] !== null ? Autolinker.link(String(feature.properties['CODIGO'])) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['MANZANA_CO'] !== null ? Autolinker.link(String(feature.properties['MANZANA_CO'])) : '') + '</td>\
+                        <th scope="row">DIRECCION</th>\
+                        <td>' + (feature.properties['DIRECCION'] !== null ? Autolinker.link(String(feature.properties['DIRECCION'])) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['CODIGO_ANT'] !== null ? Autolinker.link(String(feature.properties['CODIGO_ANT'])) : '') + '</td>\
+                        <th scope="row">Area_Calc</th>\
+                        <td>' + (feature.properties['Area_Calc'] !== null ? Autolinker.link(String(feature.properties['Area_Calc'])) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['COD_CAMP1'] !== null ? Autolinker.link(String(feature.properties['COD_CAMP1'])) : '') + '</td>\
+                        <th scope="row">Porc_Baja</th>\
+                        <td>' + (feature.properties['Porc_Baja'] !== null ? Autolinker.link(String(feature.properties['Porc_Baja'])) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['COD_CAMP2'] !== null ? Autolinker.link(String(feature.properties['COD_CAMP2'])) : '') + '</td>\
+                        <th scope="row">Porc_Media</th>\
+                        <td>' + (feature.properties['Porc_Media'] !== null ? Autolinker.link(String(feature.properties['Porc_Media'])) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['COD_TOTAL'] !== null ? Autolinker.link(String(feature.properties['COD_TOTAL'])) : '') + '</td>\
+                        <th scope="row">Porc_Null</th>\
+                        <td>' + (feature.properties['Porc_Null'] !== null ? Autolinker.link(String(feature.properties['Porc_Null'])) : '') + '</td>\
                     </tr>\
                     <tr>\
-                        <td colspan="2">' + (feature.properties['Area_PREDI'] !== null ? Autolinker.link(String(feature.properties['Area_PREDI'])) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['DIRECCION'] !== null ? Autolinker.link(String(feature.properties['DIRECCION'])) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Longitud'] !== null ? Autolinker.link(String(feature.properties['Longitud'])) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Latitud'] !== null ? Autolinker.link(String(feature.properties['Latitud'])) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Area_Calc'] !== null ? Autolinker.link(String(feature.properties['Area_Calc'])) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? Autolinker.link(String(feature.properties['Shape_Leng'])) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Shape_Area'] !== null ? Autolinker.link(String(feature.properties['Shape_Area'])) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Area_Baja'] !== null ? Autolinker.link(String(feature.properties['Area_Baja'])) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Porc_Baja'] !== null ? Autolinker.link(String(feature.properties['Porc_Baja'])) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Area_Media'] !== null ? Autolinker.link(String(feature.properties['Area_Media'])) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Porc_Media'] !== null ? Autolinker.link(String(feature.properties['Porc_Media'])) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Area_Alta'] !== null ? Autolinker.link(String(feature.properties['Area_Alta'])) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Porc_Alta'] !== null ? Autolinker.link(String(feature.properties['Porc_Alta'])) : '') + '</td>\
-                    </tr>\
-                    <tr>\
-                        <td colspan="2">' + (feature.properties['Porc_Null'] !== null ? Autolinker.link(String(feature.properties['Porc_Null'])) : '') + '</td>\
+                        <th scope="row">Porc_Alta</th>\
+                        <td>' + (feature.properties['Porc_Alta'] !== null ? Autolinker.link(String(feature.properties['Porc_Alta'])) : '') + '</td>\
                     </tr>\
                     <tr>\
                         <th scope="row">AMENAZA</th>\
@@ -165,11 +144,11 @@
             layer.bindPopup(popupContent, {maxHeight: 400});
         }
 
-        function style_Predios_PR100_1_0(feature) {
+        function style_Predios_PR2_1_0(feature) {
             switch(String(feature.properties['AMENAZA'])) {
                 case '3':
                     return {
-                pane: 'pane_Predios_PR100_1',
+                pane: 'pane_Predios_PR2_1',
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
                 dashArray: '',
@@ -183,7 +162,7 @@
                     break;
                 case '2':
                     return {
-                pane: 'pane_Predios_PR100_1',
+                pane: 'pane_Predios_PR2_1',
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
                 dashArray: '',
@@ -192,12 +171,12 @@
                 weight: 1.0, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(255,199,31,1.0)',
+                fillColor: 'rgba(254,254,0,1.0)',
             }
                     break;
                 case '1':
                     return {
-                pane: 'pane_Predios_PR100_1',
+                pane: 'pane_Predios_PR2_1',
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
                 dashArray: '',
@@ -211,18 +190,234 @@
                     break;
             }
         }
-        map.createPane('pane_Predios_PR100_1');
-        map.getPane('pane_Predios_PR100_1').style.zIndex = 401;
-        map.getPane('pane_Predios_PR100_1').style['mix-blend-mode'] = 'normal';
-        var layer_Predios_PR100_1 = new L.geoJson(json_Predios_PR100_1, {
+        map.createPane('pane_Predios_PR2_1');
+        map.getPane('pane_Predios_PR2_1').style.zIndex = 401;
+        map.getPane('pane_Predios_PR2_1').style['mix-blend-mode'] = 'normal';
+        var layer_Predios_PR2_1 = new L.geoJson(json_Predios_PR2_1, {
             attribution: '',
-            pane: 'pane_Predios_PR100_1',
-            onEachFeature: pop_Predios_PR100_1,
-            style: style_Predios_PR100_1_0,
+            pane: 'pane_Predios_PR2_1',
+            onEachFeature: pop_Predios_PR2_1,
+            style: style_Predios_PR2_1_0,
         });
-        bounds_group.addLayer(layer_Predios_PR100_1);
-        map.addLayer(layer_Predios_PR100_1);
-        function pop_Red_Hidrica_2(feature, layer) {
+        bounds_group.addLayer(layer_Predios_PR2_1);
+        map.addLayer(layer_Predios_PR2_1);
+        function pop_Predios_PR10_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"><strong>CAPA</strong><br />' + (feature.properties['CAPA'] !== null ? Autolinker.link(String(feature.properties['CAPA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CODIGO</th>\
+                        <td>' + (feature.properties['CODIGO'] !== null ? Autolinker.link(String(feature.properties['CODIGO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DIRECCION</th>\
+                        <td>' + (feature.properties['DIRECCION'] !== null ? Autolinker.link(String(feature.properties['DIRECCION'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Area_Calc</th>\
+                        <td>' + (feature.properties['Area_Calc'] !== null ? Autolinker.link(String(feature.properties['Area_Calc'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Porc_Baja</th>\
+                        <td>' + (feature.properties['Porc_Baja'] !== null ? Autolinker.link(String(feature.properties['Porc_Baja'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Porc_Media</th>\
+                        <td>' + (feature.properties['Porc_Media'] !== null ? Autolinker.link(String(feature.properties['Porc_Media'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Porc_Alta</th>\
+                        <td>' + (feature.properties['Porc_Alta'] !== null ? Autolinker.link(String(feature.properties['Porc_Alta'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Porc_Null</th>\
+                        <td>' + (feature.properties['Porc_Null'] !== null ? Autolinker.link(String(feature.properties['Porc_Null'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AMENAZA</th>\
+                        <td>' + (feature.properties['AMENAZA'] !== null ? Autolinker.link(String(feature.properties['AMENAZA'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Predios_PR10_2_0(feature) {
+            switch(String(feature.properties['AMENAZA'])) {
+                case '3':
+                    return {
+                pane: 'pane_Predios_PR10_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,1,5,1.0)',
+            }
+                    break;
+                case '2':
+                    return {
+                pane: 'pane_Predios_PR10_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,1,1.0)',
+            }
+                    break;
+                case '1':
+                    return {
+                pane: 'pane_Predios_PR10_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(1,255,77,1.0)',
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Predios_PR10_2');
+        map.getPane('pane_Predios_PR10_2').style.zIndex = 402;
+        map.getPane('pane_Predios_PR10_2').style['mix-blend-mode'] = 'normal';
+        var layer_Predios_PR10_2 = new L.geoJson(json_Predios_PR10_2, {
+            attribution: '',
+            pane: 'pane_Predios_PR10_2',
+            onEachFeature: pop_Predios_PR10_2,
+            style: style_Predios_PR10_2_0,
+        });
+        bounds_group.addLayer(layer_Predios_PR10_2);
+        map.addLayer(layer_Predios_PR10_2);
+        function pop_Predios_PR100_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    for (i in e.target._eventParents) {
+                        e.target._eventParents[i].resetStyle(e.target);
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"><strong>CAPA</strong><br />' + (feature.properties['CAPA'] !== null ? Autolinker.link(String(feature.properties['CAPA'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">CODIGO</th>\
+                        <td>' + (feature.properties['CODIGO'] !== null ? Autolinker.link(String(feature.properties['CODIGO'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Area_PREDI</th>\
+                        <td>' + (feature.properties['Area_PREDI'] !== null ? Autolinker.link(String(feature.properties['Area_PREDI'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">DIRECCION</th>\
+                        <td>' + (feature.properties['DIRECCION'] !== null ? Autolinker.link(String(feature.properties['DIRECCION'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Area_Calc</th>\
+                        <td>' + (feature.properties['Area_Calc'] !== null ? Autolinker.link(String(feature.properties['Area_Calc'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Porc_Baja</th>\
+                        <td>' + (feature.properties['Porc_Baja'] !== null ? Autolinker.link(String(feature.properties['Porc_Baja'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Porc_Media</th>\
+                        <td>' + (feature.properties['Porc_Media'] !== null ? Autolinker.link(String(feature.properties['Porc_Media'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Porc_Alta</th>\
+                        <td>' + (feature.properties['Porc_Alta'] !== null ? Autolinker.link(String(feature.properties['Porc_Alta'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Porc_Null</th>\
+                        <td>' + (feature.properties['Porc_Null'] !== null ? Autolinker.link(String(feature.properties['Porc_Null'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">AMENAZA</th>\
+                        <td>' + (feature.properties['AMENAZA'] !== null ? Autolinker.link(String(feature.properties['AMENAZA'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Predios_PR100_3_0(feature) {
+            switch(String(feature.properties['AMENAZA'])) {
+                case '3':
+                    return {
+                pane: 'pane_Predios_PR100_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,1,5,1.0)',
+            }
+                    break;
+                case '2':
+                    return {
+                pane: 'pane_Predios_PR100_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,255,1,1.0)',
+            }
+                    break;
+                case '1':
+                    return {
+                pane: 'pane_Predios_PR100_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(1,255,77,1.0)',
+            }
+                    break;
+            }
+        }
+        map.createPane('pane_Predios_PR100_3');
+        map.getPane('pane_Predios_PR100_3').style.zIndex = 403;
+        map.getPane('pane_Predios_PR100_3').style['mix-blend-mode'] = 'normal';
+        var layer_Predios_PR100_3 = new L.geoJson(json_Predios_PR100_3, {
+            attribution: '',
+            pane: 'pane_Predios_PR100_3',
+            onEachFeature: pop_Predios_PR100_3,
+            style: style_Predios_PR100_3_0,
+        });
+        bounds_group.addLayer(layer_Predios_PR100_3);
+        map.addLayer(layer_Predios_PR100_3);
+        function pop_Red_Hidrica_4(feature, layer) {
             layer.on({
                 mouseout: function(e) {
                     for (i in e.target._eventParents) {
@@ -257,35 +452,32 @@
             layer.bindPopup(popupContent, {maxHeight: 400});
         }
 
-        function style_Red_Hidrica_2_0() {
+        function style_Red_Hidrica_4_0() {
             return {
-                pane: 'pane_Red_Hidrica_2',
-            }
-        }
-        function style_Red_Hidrica_2_1() {
-            return {
-                pane: 'pane_Red_Hidrica_2',
+                pane: 'pane_Red_Hidrica_4',
                 opacity: 1,
-                color: 'rgba(38,89,128,1.0)',
-                dashArray: '',
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '1,5',
                 lineCap: 'butt',
                 lineJoin: 'miter',
-                weight: 1.0, 
-                fillOpacity: 0,
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(1,52,255,1.0)',
             }
         }
-        map.createPane('pane_Red_Hidrica_2');
-        map.getPane('pane_Red_Hidrica_2').style.zIndex = 402;
-        map.getPane('pane_Red_Hidrica_2').style['mix-blend-mode'] = 'normal';
-        var layer_Red_Hidrica_2 = new L.geoJson.multiStyle(json_Red_Hidrica_2, {
+        map.createPane('pane_Red_Hidrica_4');
+        map.getPane('pane_Red_Hidrica_4').style.zIndex = 404;
+        map.getPane('pane_Red_Hidrica_4').style['mix-blend-mode'] = 'normal';
+        var layer_Red_Hidrica_4 = new L.geoJson(json_Red_Hidrica_4, {
             attribution: '',
-            pane: 'pane_Red_Hidrica_2',
-            onEachFeature: pop_Red_Hidrica_2,
-            styles: [style_Red_Hidrica_2_0,style_Red_Hidrica_2_1,]
+            pane: 'pane_Red_Hidrica_4',
+            onEachFeature: pop_Red_Hidrica_4,
+            style: style_Red_Hidrica_4_0,
         });
-        bounds_group.addLayer(layer_Red_Hidrica_2);
-        map.addLayer(layer_Red_Hidrica_2);
-        function pop_Drenaje_Sencillo_3(feature, layer) {
+        bounds_group.addLayer(layer_Red_Hidrica_4);
+        map.addLayer(layer_Red_Hidrica_4);
+        function pop_Drenaje_Sencillo_5(feature, layer) {
             layer.on({
                 mouseout: function(e) {
                     for (i in e.target._eventParents) {
@@ -323,11 +515,11 @@
             layer.bindPopup(popupContent, {maxHeight: 400});
         }
 
-        function style_Drenaje_Sencillo_3_0() {
+        function style_Drenaje_Sencillo_5_0() {
             return {
-                pane: 'pane_Drenaje_Sencillo_3',
+                pane: 'pane_Drenaje_Sencillo_5',
                 opacity: 1,
-                color: 'rgba(1,128,255,1.0)',
+                color: 'rgba(1,73,255,1.0)',
                 dashArray: '',
                 lineCap: 'square',
                 lineJoin: 'bevel',
@@ -335,18 +527,18 @@
                 fillOpacity: 0,
             }
         }
-        map.createPane('pane_Drenaje_Sencillo_3');
-        map.getPane('pane_Drenaje_Sencillo_3').style.zIndex = 403;
-        map.getPane('pane_Drenaje_Sencillo_3').style['mix-blend-mode'] = 'normal';
-        var layer_Drenaje_Sencillo_3 = new L.geoJson(json_Drenaje_Sencillo_3, {
+        map.createPane('pane_Drenaje_Sencillo_5');
+        map.getPane('pane_Drenaje_Sencillo_5').style.zIndex = 405;
+        map.getPane('pane_Drenaje_Sencillo_5').style['mix-blend-mode'] = 'normal';
+        var layer_Drenaje_Sencillo_5 = new L.geoJson(json_Drenaje_Sencillo_5, {
             attribution: '',
-            pane: 'pane_Drenaje_Sencillo_3',
-            onEachFeature: pop_Drenaje_Sencillo_3,
-            style: style_Drenaje_Sencillo_3_0,
+            pane: 'pane_Drenaje_Sencillo_5',
+            onEachFeature: pop_Drenaje_Sencillo_5,
+            style: style_Drenaje_Sencillo_5_0,
         });
-        bounds_group.addLayer(layer_Drenaje_Sencillo_3);
-        map.addLayer(layer_Drenaje_Sencillo_3);
-        function pop_Canal_Doble_4(feature, layer) {
+        bounds_group.addLayer(layer_Drenaje_Sencillo_5);
+        map.addLayer(layer_Drenaje_Sencillo_5);
+        function pop_Canal_Doble_6(feature, layer) {
             layer.on({
                 mouseout: function(e) {
                     for (i in e.target._eventParents) {
@@ -381,32 +573,42 @@
             layer.bindPopup(popupContent, {maxHeight: 400});
         }
 
-        function style_Canal_Doble_4_0() {
+        function style_Canal_Doble_6_0() {
             return {
-                pane: 'pane_Canal_Doble_4',
+                pane: 'pane_Canal_Doble_6',
                 opacity: 1,
                 color: 'rgba(35,35,35,1.0)',
-                dashArray: '10,5',
+                dashArray: '',
                 lineCap: 'butt',
                 lineJoin: 'miter',
-                weight: 2.0, 
+                weight: 1, 
                 fill: true,
                 fillOpacity: 1,
-                fillColor: 'rgba(1,141,255,1.0)',
+                fillColor: 'rgba(0,85,255,1.0)',
             }
         }
-        map.createPane('pane_Canal_Doble_4');
-        map.getPane('pane_Canal_Doble_4').style.zIndex = 404;
-        map.getPane('pane_Canal_Doble_4').style['mix-blend-mode'] = 'normal';
-        var layer_Canal_Doble_4 = new L.geoJson(json_Canal_Doble_4, {
+        map.createPane('pane_Canal_Doble_6');
+        map.getPane('pane_Canal_Doble_6').style.zIndex = 406;
+        map.getPane('pane_Canal_Doble_6').style['mix-blend-mode'] = 'normal';
+        var layer_Canal_Doble_6 = new L.geoJson(json_Canal_Doble_6, {
             attribution: '',
-            pane: 'pane_Canal_Doble_4',
-            onEachFeature: pop_Canal_Doble_4,
-            style: style_Canal_Doble_4_0,
+            pane: 'pane_Canal_Doble_6',
+            onEachFeature: pop_Canal_Doble_6,
+            style: style_Canal_Doble_6_0,
         });
-        bounds_group.addLayer(layer_Canal_Doble_4);
-        map.addLayer(layer_Canal_Doble_4);
-        var osmGeocoder = new L.Control.Geocoder({
+        bounds_group.addLayer(layer_Canal_Doble_6);
+        map.addLayer(layer_Canal_Doble_6);
+		var title = new L.Control();
+		title.onAdd = function (map) {
+			this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+			this.update();
+			return this._div;
+		};
+		title.update = function () {
+			this._div.innerHTML = '<h2>Mapa de amenaza de inundación</h2>Municipio de Roldanillo'
+		};
+		title.addTo(map);
+		var osmGeocoder = new L.Control.Geocoder({
             collapsed: true,
             position: 'topleft',
             text: 'Search',
@@ -417,15 +619,43 @@
         document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
         .title += 'Search for a place';
         var baseMaps = {};
-        L.control.layers(baseMaps,{'<img src="legend/Canal_Doble_4.png" /> Canal_Doble': layer_Canal_Doble_4,'<img src="legend/Drenaje_Sencillo_3.png" /> Drenaje_Sencillo': layer_Drenaje_Sencillo_3,'<img src="legend/Red_Hidrica_2.png" /> Red_Hidrica': layer_Red_Hidrica_2,'Predios_PR100<br /><table><tr><td style="text-align: center;"><img src="legend/Predios_PR100_1_30.png" /></td><td>3</td></tr><tr><td style="text-align: center;"><img src="legend/Predios_PR100_1_21.png" /></td><td>2</td></tr><tr><td style="text-align: center;"><img src="legend/Predios_PR100_1_12.png" /></td><td>1</td></tr></table>': layer_Predios_PR100_1,"ESRI Topo": layer_ESRITopo_0,}).addTo(map);
+        L.control.layers(baseMaps,{'<img src="legend/Canal_Doble_6.png" /> Canal_Doble': layer_Canal_Doble_6,'<img src="legend/Drenaje_Sencillo_5.png" /> Drenaje_Sencillo': layer_Drenaje_Sencillo_5,'<img src="legend/Red_Hidrica_4.png" /> Red_Hidrica': layer_Red_Hidrica_4,'Predios_PR100<br /><table><tr><td style="text-align: center;"><img src="legend/Predios_PR100_3_30.png" /></td><td>3</td></tr><tr><td style="text-align: center;"><img src="legend/Predios_PR100_3_21.png" /></td><td>2</td></tr><tr><td style="text-align: center;"><img src="legend/Predios_PR100_3_12.png" /></td><td>1</td></tr></table>': layer_Predios_PR100_3,'Predios_PR10<br /><table><tr><td style="text-align: center;"><img src="legend/Predios_PR10_2_30.png" /></td><td>3</td></tr><tr><td style="text-align: center;"><img src="legend/Predios_PR10_2_21.png" /></td><td>2</td></tr><tr><td style="text-align: center;"><img src="legend/Predios_PR10_2_12.png" /></td><td>1</td></tr></table>': layer_Predios_PR10_2,'Predios_PR2<br /><table><tr><td style="text-align: center;"><img src="legend/Predios_PR2_1_30.png" /></td><td>3</td></tr><tr><td style="text-align: center;"><img src="legend/Predios_PR2_1_21.png" /></td><td>2</td></tr><tr><td style="text-align: center;"><img src="legend/Predios_PR2_1_12.png" /></td><td>1</td></tr></table>': layer_Predios_PR2_1,"Google Terrain": layer_GoogleTerrain_0,}).addTo(map);
         setBounds();
+        var i = 0;
+
         map.addControl(new L.Control.Search({
-            layer: layer_Predios_PR100_1,
+            layer: layer_Predios_PR100_3,
             initial: false,
             hideMarkerOnCollapse: true,
             propertyName: 'DIRECCION'}));
         document.getElementsByClassName('search-button')[0].className +=
          ' fa fa-binoculars';
+ 
+		var Vistagral=new L.TileLayer('https://mt1.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {attribution:osmAttrib});
+		var miniMap=new L.Control.MiniMap(Vistagral,{toggleDisplay: true}).addTo(map);
+		var graphicScale= L.control.graphicScale({
+		doubleLine:true,
+		fill: 'hollow',
+		showSunits: true,
+		minUnitWidth: 40,
+		maxUnitsWidth:300}).addTo(map);
+	    var scaleText = L.DomUtil.create('div', 'scaleText' );
+		graphicScale._container.insertBefore(scaleText, graphicScale._container.firstChild);
+		scaleText.innerHTML = '<h1>Escala gráfica</h1><p>Estilo: <span class="choice">hollow</span>-<span class="choice">line</span>-<span class="choice">fill</span>-<span class="choice">nofill</span></p>';
+		var styleChoices = scaleText.querySelectorAll('.choice');
+
+		for (var i = 0; i < styleChoices.length; i++) {
+        styleChoices[i].addEventListener('click', function(e) {
+            graphicScale._setStyle( { fill: e.currentTarget.innerHTML } );
+        });
+		}
+		var legend =L.control({position:'topleft'});
+		legend.onAdd=function(map){
+			var div=L.DomUtil.create('div', 'info legend');
+			div.innerHTML+='<img alt="legend" src="css/images/Legend.png" width="110" height="140"/>';
+			return div;
+		};
+		legend.addTo(map);
         </script>
     </body>
 </html>
